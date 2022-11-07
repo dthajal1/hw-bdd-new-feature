@@ -4,12 +4,15 @@ class Movie < ActiveRecord::Base
   # implement this method. Remeber to exclude [self]
   # (the current movie) from your return value
   def self.others_by_same_director(id)
-    movie = self.find(id)
+    movie = Movie.find(id)
     director = movie.respond_to?('director') ? movie.director : ''
     if director and !director.empty?
-      movies = self.where(director: director)
+      movies = Movie.where(:director => director)
+      # puts movies.length
       # movies.delete(movie)
-      # movies
+      movies -= [movie]
+      # puts movies.length
+      return movies
     else
       return []
     end

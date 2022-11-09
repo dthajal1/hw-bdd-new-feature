@@ -39,13 +39,20 @@ class MoviesController < ApplicationController
   end
 
   def show_by_director
+    # byebug
     id = params[:id]
     movie = Movie.find(id)
     @director = movie.director
-    if (@director)
+    if (@director != "")
         @movies = Movie.others_by_same_director(id)
+        if (@movies)
+            return @movies
+        else
+            flash[:notice] = "#{movie.title} has no director."
+            redirect_to movies_path
+        end
     else
-        flash[:notice] = "#{movie.title} has no director."
+        flash[:warning] = "'#{movie.title}' has no director info"
         redirect_to movies_path
     end
   end
